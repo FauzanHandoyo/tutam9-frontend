@@ -1,17 +1,25 @@
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [message, setMessage] = useState('');
+  const [data, setData] = useState(null);
 
   useEffect(() => {
+    // Fetch data from backend
     fetch(`${import.meta.env.VITE_API_URL}/data`)
-      .then(res => res.json())
-      .then(data => setMessage(data.message));
+      .then((response) => response.json())
+      .then((result) => {
+        setData(result);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <h1 className="text-2xl font-bold text-blue-600">{message || 'Loading...'}</h1>
+      {data ? (
+        <h1 className="text-2xl font-bold text-blue-600">{data.message}</h1>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }
