@@ -1,26 +1,32 @@
-import { useEffect, useState } from 'react';
+// frontend/src/App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Register from './components/Register';
+import Login from './components/Login';
+import Dashboard from './pages/Home';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    // Fetch data from backend
-    fetch(`${import.meta.env.VITE_API_URL}/data`)
-      .then((response) => response.json())
-      .then((result) => {
-        setData(result);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []);
-
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      {data ? (
-        <h1 className="text-2xl font-bold text-blue-600">{data.message}</h1>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Redirect default route */}
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+      </Routes>
+    </Router>
   );
 }
 
